@@ -40,8 +40,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'api',
-    'authentication',
-    'snippets'
+    'snippets',
+    'user',
 ]
 
 MIDDLEWARE = [
