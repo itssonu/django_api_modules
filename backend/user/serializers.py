@@ -1,11 +1,26 @@
-from django.contrib.auth.models import AbstractUser
-from django.db import models
+from rest_framework import serializers
+from .models import User
 
-class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    dob = models.DateField(null=True, blank=True)
-    profile_image = models.ImageField(upload_to='user/profile_images', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'first_name', 'last_name', 'dob', 'profile_image']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            dob=validated_data.get('dob'),
+            profile_image=validated_data.get('profile_image')
+        )
+        return user
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'dob', 'profile_image', 'created_at', 'updated_at']
+        read_only_fields = ['email', 'created_at', 'updated_at']
