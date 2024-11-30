@@ -99,12 +99,15 @@ class ProfileView(APIView):
     
     def get(self, request):
         try:
+            user = UserProfileSerializer(request.user).data
+            if user['profile_image']:
+                user['profile_image'] = request.build_absolute_uri(user['profile_image'])
             return Response({
                 'message': 'Profile retrieved successfully',
                 'statusCode': 200,
                 'success': True,
                 'data': {
-                    'user': UserProfileSerializer(request.user).data
+                    'user': user
                 }
             }, status=status.HTTP_200_OK)
             

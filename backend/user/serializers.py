@@ -24,3 +24,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'first_name', 'last_name', 'dob', 'profile_image', 'created_at', 'updated_at']
         read_only_fields = ['email', 'created_at', 'updated_at']
+
+    def update(self, instance, validated_data):
+        if 'profile_image' in validated_data:
+            instance.profile_image.delete()
+        return super().update(instance, validated_data)
