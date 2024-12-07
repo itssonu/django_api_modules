@@ -94,6 +94,42 @@ class LoginView(APIView):
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class RefreshTokenView(APIView):
+    def post(self, request):
+        try:
+            refreshToken = request.data.get('refresh_token')
+
+            if not refreshToken:
+                return Response({
+                    'message': 'refresh token is required',
+                    'statusCode': 400,
+                    'success': False,
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            token = RefreshToken(refreshToken)
+
+            return Response({
+                    'message': 'Token refreshed successfully',
+                    'statusCode': 200,
+                    'success': True,
+                    'data': {
+                        'access_token': str(token.access_token)
+                    }
+                }, status=status.HTTP_200_OK)
+            
+            
+
+        except Exception as e:
+            return Response({
+                'message': str(e),
+                'statusCode': 500,
+                'success': False,
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
     
