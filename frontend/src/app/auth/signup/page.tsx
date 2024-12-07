@@ -2,8 +2,12 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const Signup = () => {
+    const { signup } = useAuth()
+    const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -31,10 +35,18 @@ const Signup = () => {
         }
     };
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         console.log('Form Data:', formData);
         console.log('Profile Image:', profileImage);
+        await signup({
+            email: formData.email,
+            password: formData.password,
+        first_name: formData.first_name,
+            last_name: formData.last_name,
+            dob: formData.dob, profile_image: profileImage
+        })
+        router.push('/admin/dashboard')
     };
 
     return (
@@ -143,7 +155,6 @@ const Signup = () => {
                                 name="dob"
                                 value={formData.dob}
                                 onChange={handleInputChange}
-                                required
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             />
                         </div>

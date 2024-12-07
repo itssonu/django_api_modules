@@ -11,6 +11,7 @@ from .models import User
 class RegisterView(APIView):
     def post(self, request):
         try:
+            a = request.data.get('email')
             if User.objects.filter(email=request.data.get('email')).exists():
                 return Response({
                     'message': 'User with this email already exists',

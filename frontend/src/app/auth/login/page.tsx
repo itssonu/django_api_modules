@@ -1,14 +1,19 @@
 'use client'
+import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent } from 'react'
 
 const Login = () => {
+    const {login} =useAuth()
+    const router = useRouter()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
   
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
       e.preventDefault();
-      console.log('Login submitted:', { email, password });
+      await login(email, password)
+      router.push('/admin/dashboard')
     };
 
     return (
